@@ -21,6 +21,7 @@ use Data::Dumper;
 
 my $directory;
 my $library;
+my $options;
 my $outputfile;
 
 print "************************************************************\n";
@@ -32,9 +33,12 @@ print "************************************************************\n";
 print "\n";
 
 ($directory, $library) = @ARGV;
-if($directory eq ''){
+if($ARGV[2]){
+    $options = $ARGV[2];
+}
+if(!$directory || $directory eq ''){
     print "Use this tool with at least the argument of the directory\n";
-    print "html_builder.pl <directory> <libraryname>";
+    print "html_builder.pl <directory> [libraryname] [options]\n";
     die();
 }
 chomp($directory);
@@ -152,7 +156,13 @@ print "Make Package.\n";
 my $packName = $library;
 $packName =~ s/\.a$//sg;
 $outTar = `tar -cvHf $packName.tar CEmbedResources.h cer_resourcebundle.h $library`;
+if($options =~ /-addimplementation/isg){
+    print "Add implementation into tarball\n";
+    $outTar = `tar -rf $packName.tar cer_resourcebundle.c`;
+    print $outTar;   
+}
 `mv $library $packName.tar identifyer.idx ../dist`;
+
 unlink("cer_resourcebundle.c"); 
 unlink("cer_resourcebundle.h"); 
 unlink("cer_resourcebundle.o");

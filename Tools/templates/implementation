@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "cer_resourcebundle.h"
-#include "../../src/CEmbedResources.h"
+#include "CEmbedResources.h"
 
 <loop name="construct">
 static void _add_resouce_N(CER_resource_t *target){

@@ -30,12 +30,13 @@ Create a directory with all your resource files in there. It can have subdirecto
 
 Run:
 <code>
-    # perl ./c_builder _directory_ [_library name_]
+    # perl ./c_builder _directory_ [_library name_] [_options_]
 </code>
 
 The script scans the folder _directory_ and reads all files in, generates a hashtable of all informations and writes the information and the content into a .c file. 
 After the generation process it will be compiled using *gcc* and packed using *ar*. After all the result will be stored into a tarball and moved to the ./Tools/dist folder. 
 By default the library name is **libcembedresources_tttt.a ** where tttt is the current timestamp. 
+If the Opion "-addimplementation" is set than the generated sourcecode will be placed into the tarball. 
 
 Using CEmbedResources in your project
 -------------------------------------
@@ -54,8 +55,8 @@ Instead of *CEmbedResources_Size* that returns the count of elements in the btre
 Examples
 --------
 <pre>
-#include <stdio.h>
-#include <stdlib.h>
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
 #include "lib/CEmbedResources.h"
 #include "lib/cer_resourcebundle.h"
 
