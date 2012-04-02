@@ -158,7 +158,7 @@ $packName =~ s/\.a$//sg;
 $outTar = `tar -cvHf $packName.tar CEmbedResources.h cer_resourcebundle.h $library`;
 if($options =~ /-addimplementation/isg){
     print "Add implementation into tarball\n";
-    $outTar = `tar -rf $packName.tar cer_resourcebundle.c`;
+    $outTar = `tar -rvHf $packName.tar cer_resourcebundle.c`;
     print $outTar;   
 }
 `mv $library $packName.tar identifyer.idx ../dist`;
