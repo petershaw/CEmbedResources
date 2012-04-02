@@ -1,0 +1,7 @@
+#include <stdlib.h>
+#include "./CEmbedResources.h"
+
+#define NUM_OF_RESOURCES (0)
+
+
+int *initialize_resources(CER_resourcetable_t *table, int (*insertFunc)(CER_resourcetable_t *, CER_resource_t *));

@@ -1,0 +1,30 @@
+#include <stdlib.h>
+#include "cer_resourcebundle.h"
+#include "../../src/CEmbedResources.h"
+
+<loop name="construct">
+static void _add_resouce_N(CER_resource_t *target){
+    const char *content = "";
+    target->resourceName = "";
+    target->resourceSize = 0;
+    target->resourceIdentifyer = "00000000000000000000000000000000";
+    target->content = (char *) content; 
+}
+</loop>
+
+int *initialize_resources(CER_resourcetable_t *table, int (*insertFunc)(CER_resourcetable_t *, CER_resource_t *)){
+    int errno = 0;
+    CER_resource_t *all_resources = calloc(NUM_OF_RESOURCES, sizeof(CER_resource_t));
+    int i = 0;
+
+<loop name="add">
+    ++i;
+    _add_resouce_N( &all_resources[i * sizeof(CER_resource_t)] );
+</loop>
+
+    for(i=1; i<=NUM_OF_RESOURCES; ++i){
+        errno += (*insertFunc)(table, &all_resources[i * sizeof(CER_resource_t)]);
+    }
+    return errno;
+}
+
