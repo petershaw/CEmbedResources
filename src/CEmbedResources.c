@@ -19,6 +19,10 @@
 #include "CEmbedResources.h"
 
 void CEmbedResources_Init(CER_resourcetable_t *table, int (*initFn)(CER_resourcetable_t *, void *)) {
+    table->resourceIdentifyer = NULL;
+    table->left = NULL;
+    table->right = NULL;
+    table->cer_resource = NULL;
     (*initFn)(table, &CEmbedResources_Insert);
 }
 
@@ -115,9 +119,10 @@ int _cer_insert_recr(CER_resourcetable_t *cur, CER_resource_t *element) {
                 return ++errno;
             }
             cur->right->resourceIdentifyer = element->resourceIdentifyer;
-            // cur->right->cer_resource = element;
             cur->right->cer_resource = malloc(sizeof (CER_resource_t));
             memcpy(cur->right->cer_resource, element, sizeof (CER_resource_t));
+            cur->right->left = NULL;
+            cur->right->right = NULL;
         } else {
             errno += _cer_insert_recr(cur->right, element);
         }
@@ -128,9 +133,10 @@ int _cer_insert_recr(CER_resourcetable_t *cur, CER_resource_t *element) {
                 return ++errno;
             }
             cur->left->resourceIdentifyer = element->resourceIdentifyer;
-            //cur->left->cer_resource = element;
             cur->left->cer_resource = malloc(sizeof (CER_resource_t));
             memcpy(cur->left->cer_resource, element, sizeof (CER_resource_t));
+            cur->left->left = NULL;
+            cur->left->right = NULL;
         } else {
             errno += _cer_insert_recr(cur->left, element);
         }
