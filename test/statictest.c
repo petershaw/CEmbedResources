@@ -15,7 +15,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "CUnit/Basic.h"
-#include "../../src/CEmbedResources.h"
+#include "../src/CEmbedResources.h"
 #include "staticTestImpl.h"
 
 /*
@@ -34,7 +34,7 @@ void test_initialize() {
     CER_resourcetable_t *table = malloc(sizeof (CER_resourcetable_t));
     CEmbedResources_Init(table, initialize_resources);
     int size = CEmbedResources_Size(table);
-    CU_ASSERT_EQUAL(size, 4);
+    CU_ASSERT_EQUAL(size, NUM_OF_RESOURCES);
     free(table);
 
 }
@@ -45,21 +45,21 @@ void testGetResourceByIdentifyer() {
 
     CER_resource_t *result = malloc(sizeof (CER_resource_t));
     int depth = CEmbedResources_GetResourceByIdentifyer(table2, (char *) "ADED0000000000000000000000000000", result);
-    printf("-- %s (%d)", result->resourceName, depth);
+    printf("-- %s (%d)\n", result->resourceName, depth);
     CU_ASSERT_EQUAL(result->resourceName, "b.file");
     CU_ASSERT_EQUAL(depth, 2);
     free(result);
 
     CER_resource_t *result2 = malloc(sizeof (CER_resource_t));
     depth = CEmbedResources_GetResourceByIdentifyer(table2, (char *) "ABCD0000000000000000000000000000", result2);
-    printf("-- %s (%d)", result2->resourceName, depth);
+    printf("-- %s (%d)\n", result2->resourceName, depth);
     CU_ASSERT_EQUAL(result2->resourceName, "a.file");
     CU_ASSERT_EQUAL(depth, 1);
     free(result2);
 
     CER_resource_t *result3 = malloc(sizeof (CER_resource_t));
     depth = CEmbedResources_GetResourceByIdentifyer(table2, (char *) "ADAD0000000000000000000000000000", result3);
-    printf("-- %s (%d)", result3->resourceName, depth);
+    printf("-- %s (%d)\n", result3->resourceName, depth);
     CU_ASSERT_EQUAL(result3->resourceName, "d.file");
     CU_ASSERT_EQUAL(depth, 3);
     free(result3);
@@ -67,9 +67,9 @@ void testGetResourceByIdentifyer() {
     // resource not there.
     CER_resource_t *result4 = malloc(sizeof (CER_resource_t));
     depth = CEmbedResources_GetResourceByIdentifyer(table2, (char *) "ZZZZ0000000000000000000000000000", result4);
-    printf("#- %s (%d)", result4->resourceName, depth);
+    printf("#- %s (%d)\n", result4->resourceName, depth);
     CU_ASSERT_EQUAL(result4->resourceName, NULL);
-    CU_ASSERT_EQUAL(depth, 3);
+    CU_ASSERT_EQUAL(depth, 4);
     free(result4);
 
     free(table2);
@@ -84,6 +84,24 @@ void testGetContentByIdentifyer() {
     printf("Content: %s Cmp(%d)\n", result, (strcmp(result, expected)));
     CU_ASSERT_STRING_EQUAL(result, expected);
     free(table3);
+}
+
+void testLargeContent(){
+    CER_resourcetable_t *table4 = malloc(sizeof (CER_resourcetable_t));
+    CEmbedResources_Init(table4, &initialize_resources);
+    
+    CER_resource_t *resultResource = malloc(sizeof (CER_resource_t));
+    int depth = CEmbedResources_GetResourceByIdentifyer(table4, (char *) "D6670C850CD9357B2EE617E4C21CC5EB", resultResource);
+    
+    char *result = CEmbedResources_GetContentByIdentifyer(table4, (char *) "D6670C850CD9357B2EE617E4C21CC5EB");
+    printf("Content: %s\n", result);
+    int len = strlen(result);
+    
+    printf("File: %s \n", resultResource->resourceName);
+    
+    printf("Founder: %d has to be %d\n", len, resultResource->resourceSize);
+    CU_ASSERT_EQUAL(resultResource->resourceSize, len);
+    free(table4);
 }
 
 int main() {
@@ -103,7 +121,8 @@ int main() {
     /* Add the tests to the suite */
     if ((NULL == CU_add_test(pSuite, "test initialize", test_initialize)) ||
             (NULL == CU_add_test(pSuite, "testGetResourceByIdentifyer", testGetResourceByIdentifyer)) ||
-            (NULL == CU_add_test(pSuite, "testGetContentByIdentifyer", testGetContentByIdentifyer))
+            (NULL == CU_add_test(pSuite, "testGetContentByIdentifyer", testGetContentByIdentifyer)) ||
+            (NULL == CU_add_test(pSuite, "testLargeContent", testLargeContent))
             ) {
         CU_cleanup_registry();
         return CU_get_error();

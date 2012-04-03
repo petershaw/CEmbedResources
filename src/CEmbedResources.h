@@ -24,7 +24,7 @@ extern "C" {
      * Structure of a single resource
      */
     typedef struct CER_resource {
-        int resourceSize;
+        long int resourceSize;
         char *resourceIdentifyer;
         char *resourceName;
         char *content;

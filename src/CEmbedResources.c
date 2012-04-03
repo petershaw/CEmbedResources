@@ -80,7 +80,7 @@ char *CEmbedResources_GetContentByIdentifyer(CER_resourcetable_t *table,
         } else {
             // == 0
             // found:
-            unsigned char *dest = malloc(cur->cer_resource->resourceSize);
+            unsigned char *dest[cur->cer_resource->resourceSize];
             decode_base64(dest, cur->cer_resource->content);
             return dest;
         }
@@ -92,10 +92,13 @@ char *CEmbedResources_GetContentByIdentifyer(CER_resourcetable_t *table,
 
 int CEmbedResources_Insert(CER_resourcetable_t *table, CER_resource_t *element) {
     int errno = 0;
+    printf("Insert: %s\n", element->resourceIdentifyer);
     if (table->resourceIdentifyer == NULL) {
         table->resourceIdentifyer = element->resourceIdentifyer;
-        table->cer_resource = malloc(sizeof (CER_resource_t));
-        memcpy(table->cer_resource, element, sizeof (CER_resource_t));
+
+        //table->cer_resource = malloc(sizeof (CER_resource_t));
+        //memcpy(table->cer_resource, element, sizeof (CER_resource_t));
+        table->cer_resource = element;
     } else {
         errno += _cer_insert_recr(table, element);
     }
@@ -119,8 +122,11 @@ int _cer_insert_recr(CER_resourcetable_t *cur, CER_resource_t *element) {
                 return ++errno;
             }
             cur->right->resourceIdentifyer = element->resourceIdentifyer;
-            cur->right->cer_resource = malloc(sizeof (CER_resource_t));
-            memcpy(cur->right->cer_resource, element, sizeof (CER_resource_t));
+            
+            //cur->right->cer_resource = malloc(sizeof (CER_resource_t));
+            //memcpy(cur->right->cer_resource, element, sizeof (CER_resource_t));
+            cur->right->cer_resource = element;
+            
             cur->right->left = NULL;
             cur->right->right = NULL;
         } else {
@@ -133,8 +139,11 @@ int _cer_insert_recr(CER_resourcetable_t *cur, CER_resource_t *element) {
                 return ++errno;
             }
             cur->left->resourceIdentifyer = element->resourceIdentifyer;
-            cur->left->cer_resource = malloc(sizeof (CER_resource_t));
-            memcpy(cur->left->cer_resource, element, sizeof (CER_resource_t));
+            
+            // cur->left->cer_resource = malloc(sizeof (CER_resource_t));
+            // memcpy(cur->left->cer_resource, element, sizeof (CER_resource_t));
+            cur->left->cer_resource = element;
+            
             cur->left->left = NULL;
             cur->left->right = NULL;
         } else {
@@ -143,8 +152,10 @@ int _cer_insert_recr(CER_resourcetable_t *cur, CER_resource_t *element) {
     } else {
         // == (overwrite)
         cur->cer_resource = element;
-        cur->cer_resource = malloc(sizeof (CER_resource_t));
-        memcpy(cur->cer_resource, element, sizeof (CER_resource_t));
+        
+        // cur->cer_resource = malloc(sizeof (CER_resource_t));
+        // memcpy(cur->cer_resource, element, sizeof (CER_resource_t));
+        cur->cer_resource = element;
     }
     return errno;
 }

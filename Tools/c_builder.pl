@@ -108,7 +108,7 @@ foreach my $f(@funcs){
     $construct =~ s/_add_resouce_N/_add_resouce_$funccount/sg;
     $construct =~ s/\*content\s+=\s+\"\"/*content = \"\\\n$f->{'content'}\"/sg;
     $construct =~ s/resourceName\s+=\s+\"\"/resourceName = \"$f->{'resourceName'}\"/sg;
-    $construct =~ s/resourceSize\s+=\s+0/resourceSize = \"$f->{'resourceSize'}\"/sg;
+    $construct =~ s/resourceSize\s+=\s+0/resourceSize = $f->{'resourceSize'}/sg;
     $construct =~ s/resourceIdentifyer\s+=\s+\"00000000000000000000000000000000\"/resourceIdentifyer = \"$f->{'resourceIdentifyer'}\"/sg;
     $replaceWith{'construct'} .= $construct;
 }
