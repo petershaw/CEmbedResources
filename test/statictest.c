@@ -75,6 +75,19 @@ void testGetResourceByIdentifyer() {
     free(table2);
 }
 
+void testGetResourceContentByIdentifyer() {
+    CER_resourcetable_t *table2 = malloc(sizeof (CER_resourcetable_t));
+    CEmbedResources_Init(table2, &initialize_resources);
+    char *expected = "abc def";
+    CER_resource_t *result = malloc(sizeof (CER_resource_t)); 
+    int depth = CEmbedResources_GetResourceByIdentifyer(table2, (char *) "ADED0000000000000000000000000000", result);
+    printf("-- %s (%d) = %s\n", result->resourceName, depth, result->content);
+    printf("CHECK: %d\n", strcmp(result->content, expected));
+    CU_ASSERT_EQUAL(strcmp(result->content, expected), 0);
+    free(result);
+    free(table2);
+}
+
 void testGetContentByIdentifyer() {
     CER_resourcetable_t *table3 = malloc(sizeof (CER_resourcetable_t));
     CEmbedResources_Init(table3, &initialize_resources);
@@ -89,17 +102,12 @@ void testGetContentByIdentifyer() {
 void testLargeContent(){
     CER_resourcetable_t *table4 = malloc(sizeof (CER_resourcetable_t));
     CEmbedResources_Init(table4, &initialize_resources);
-    
+
     CER_resource_t *resultResource = malloc(sizeof (CER_resource_t));
     int depth = CEmbedResources_GetResourceByIdentifyer(table4, (char *) "D6670C850CD9357B2EE617E4C21CC5EB", resultResource);
-    
     char *result = CEmbedResources_GetContentByIdentifyer(table4, (char *) "D6670C850CD9357B2EE617E4C21CC5EB");
-    printf("Content: %s\n", result);
     int len = strlen(result);
     
-    printf("File: %s \n", resultResource->resourceName);
-    
-    printf("Founder: %d has to be %d\n", len, resultResource->resourceSize);
     CU_ASSERT_EQUAL(resultResource->resourceSize, len);
     free(table4);
 }
@@ -121,6 +129,7 @@ int main() {
     /* Add the tests to the suite */
     if ((NULL == CU_add_test(pSuite, "test initialize", test_initialize)) ||
             (NULL == CU_add_test(pSuite, "testGetResourceByIdentifyer", testGetResourceByIdentifyer)) ||
+            (NULL == CU_add_test(pSuite, "testGetResourceContentByIdentifyer", testGetResourceContentByIdentifyer)) ||
             (NULL == CU_add_test(pSuite, "testGetContentByIdentifyer", testGetContentByIdentifyer)) ||
             (NULL == CU_add_test(pSuite, "testLargeContent", testLargeContent))
             ) {
