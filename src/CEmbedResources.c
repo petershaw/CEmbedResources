@@ -93,8 +93,6 @@ char *CEmbedResources_GetContentByIdentifyer(CER_resourcetable_t *table,
             decode_base64(dest, target->content);
             
             free(target);
-            
-            printf("#### %s \n", dest);
             return dest;
         }
     }
