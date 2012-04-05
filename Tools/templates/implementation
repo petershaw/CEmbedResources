@@ -12,19 +12,18 @@ static void _add_resouce_N(CER_resource_t *target){
 }
 </loop>
 
-int *initialize_resources(CER_resourcetable_t *table, int (*insertFunc)(CER_resourcetable_t *, CER_resource_t *)){
+int *initialize_resources(CER_resourcetable_t *table, int (*insertFunc)(CER_resourcetable_t *, char *, void *)){
     int errno = 0;
-    CER_resource_t *all_resources = calloc(NUM_OF_RESOURCES, sizeof(CER_resource_t));
-    int i = 0;
+
+    CER_resource_t *resource = malloc(sizeof(CER_resource_t));
 
 <loop name="add">
-    ++i;
-    _add_resouce_N( &all_resources[i * sizeof(CER_resource_t)] );
+    _add_resouce_N( resource );
+    errno += (*insertFunc)(table, resource->resourceIdentifyer, &_add_resouce_N);
 </loop>
+    
+    free(resource);
 
-    for(i=1; i<=NUM_OF_RESOURCES; ++i){
-        errno += (*insertFunc)(table, &all_resources[i * sizeof(CER_resource_t)]);
-    }
     return errno;
 }
 

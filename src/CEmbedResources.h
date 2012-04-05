@@ -20,6 +20,9 @@
 extern "C" {
 #endif
 
+    typedef void fooPtr(void *);
+    
+    
     /**
      * Structure of a single resource
      */
@@ -32,11 +35,10 @@ extern "C" {
 
     /**
      * Binary tree of all resources
-     */
-
+     */ 
     struct CER_resourcetable {
         char *resourceIdentifyer;
-        CER_resource_t *cer_resource;
+        fooPtr *callback;
         struct CER_resourcetable *left;
         struct CER_resourcetable *right;
     };
@@ -90,7 +92,7 @@ extern "C" {
      * @param CER_resource_t element to insert.
      * @return int - 0 on success!
      */
-    int CEmbedResources_Insert(CER_resourcetable_t *, CER_resource_t *);
+    int CEmbedResources_Insert(CER_resourcetable_t *, char *, void *);
 
 #ifdef	__cplusplus
 }

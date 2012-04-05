@@ -2,42 +2,45 @@
 #include "../src/CEmbedResources.h"
 #include "staticTestImpl.h"
 
-static void _add_resouce_1(CER_resource_t *target){
+static void _add_resouce_1(CER_resource_t *target) {
     const char *content = "YQ==\0"; // "a"
     target->resourceName = "a.file";
     target->resourceSize = 2;
     target->resourceIdentifyer = "ABCD0000000000000000000000000000";
-    target->content = (char *) content; 
+    target->content = (char *) content;
 }
 
 // add right
-static void _add_resouce_2(CER_resource_t *target){
+
+static void _add_resouce_2(CER_resource_t *target) {
     const char *content = "YWJjIGRlZg==\0"; // "abc def"
     target->resourceName = "b.file";
     target->resourceSize = 8;
     target->resourceIdentifyer = "ADED0000000000000000000000000000";
-    target->content = (char *) content; 
+    target->content = (char *) content;
 }
 
 // add right, right
-static void _add_resouce_3(CER_resource_t *target){
+
+static void _add_resouce_3(CER_resource_t *target) {
     const char *content = "YWJjIGRlZiAxMjM=\0"; // "abc def 123"
     target->resourceName = "c.file";
     target->resourceSize = 12;
     target->resourceIdentifyer = "AEED0000000000000000000000000000";
-    target->content = (char *) content; 
+    target->content = (char *) content;
 }
 
 // add right, left
-static void _add_resouce_4(CER_resource_t *target){
+
+static void _add_resouce_4(CER_resource_t *target) {
     const char *content = "YWJjIGRlZiAxMjM0\0"; // "abc def 1234"
     target->resourceName = "d.file";
     target->resourceSize = 13;
     target->resourceIdentifyer = "ADAD0000000000000000000000000000";
-    target->content = (char *) content; 
+    target->content = (char *) content;
 }
 
-static void _add_resouce_5(CER_resource_t *target){
+static void _add_resouce_5(CER_resource_t *target) {
     const char *content = "\
 MDogIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t\
 LS0tLS0tLS0tLS0tLS0tLS0tLS0KICAgIDAxMjM0NTY3ODlBQkNERUZHSElKS0xNTk9QUVJTVFVW\
@@ -182,32 +185,32 @@ LS0tLS0tLS0tLS0K\
     target->resourceName = "/testfile.txt";
     target->resourceSize = 7878;
     target->resourceIdentifyer = "D6670C850CD9357B2EE617E4C21CC5EB";
-    target->content = (char *) content; 
+    target->content = (char *) content;
 }
 
-int *initialize_resources(CER_resourcetable_t *table, int (*insertFunc)(CER_resourcetable_t *, CER_resource_t *)){
+int *initialize_resources(CER_resourcetable_t *table, int (*insertFunc)(CER_resourcetable_t *, char *, void *)) {
     int errno = 0;
-    CER_resource_t *all_resources = calloc(NUM_OF_RESOURCES, sizeof(CER_resource_t));
-    int i = 1;
-    _add_resouce_1( &all_resources[i * sizeof(CER_resource_t)] );
-    
-    ++i;
-    _add_resouce_2( &all_resources[i * sizeof(CER_resource_t)] );
-    
-    ++i;
-    _add_resouce_3( &all_resources[i * sizeof(CER_resource_t)] );
-    
-    ++i;
-    _add_resouce_4( &all_resources[i * sizeof(CER_resource_t)] );
 
-    ++i;
-    _add_resouce_5( &all_resources[i * sizeof(CER_resource_t)] );
-    
-    
-    for(i=1; i<=NUM_OF_RESOURCES; ++i){
-        printf("size of %d: %d\n", i, all_resources[i * sizeof(CER_resource_t)].resourceSize);
-        errno += (*insertFunc)(table, &all_resources[i * sizeof(CER_resource_t)]);
-    }
+    CER_resource_t *resource = malloc(sizeof (CER_resource_t));
+
+
+    _add_resouce_1(resource);
+    errno += (*insertFunc)(table, resource->resourceIdentifyer, &_add_resouce_1);
+
+    _add_resouce_2(resource);
+    errno += (*insertFunc)(table, resource->resourceIdentifyer, &_add_resouce_2);
+
+    _add_resouce_3(resource);
+    errno += (*insertFunc)(table, resource->resourceIdentifyer, &_add_resouce_3);
+
+    _add_resouce_4(resource);
+    errno += (*insertFunc)(table, resource->resourceIdentifyer, &_add_resouce_4);
+
+    _add_resouce_5(resource);
+    errno += (*insertFunc)(table, resource->resourceIdentifyer, &_add_resouce_5);
+
+    free(resource);
+
     return errno;
 }
 
