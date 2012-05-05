@@ -155,13 +155,27 @@ print "************************************************************\n";
 print "Make Package.\n";
 my $packName = $library;
 $packName =~ s/\.a$//sg;
-$outTar = `tar -cvHf $packName.tar CEmbedResources.h cer_resourcebundle.h $library`;
+my $outTar;
+if (`uname` =~ /SunOS/i){
+	$outTar = `tar -cvhf $packName.tar CEmbedResources.h cer_resourcebundle.h $library`;
+} else {
+	$outTar = `tar -cvHf $packName.tar CEmbedResources.h cer_resourcebundle.h $library`;
+}
 if($options && $options =~ /-addimplementation/isg){
     print "Add implementation into tarball\n";
-    $outTar = `tar -rvHf $packName.tar cer_resourcebundle.c`;
+	if (`uname` =~ /SunOS/i){
+	    $outTar = `tar -rvhf $packName.tar cer_resourcebundle.c`;
+	} else {
+	    $outTar = `tar -rvHf $packName.tar cer_resourcebundle.c`;
+	}
     print $outTar;   
 }
-`mv $library $packName.tar identifyer.idx ../dist`;
+$uname = `uname`;
+chomp($uname);
+mkdir("../dist");
+mkdir("../dist/".$uname);
+
+`mv $library $packName.tar identifyer.idx ../dist/$uname`;
 
 unlink("cer_resourcebundle.c"); 
 unlink("cer_resourcebundle.h"); 
