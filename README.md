@@ -102,14 +102,14 @@ You can customize the build process by editing the c_builder.pl script. Everythi
 
 Permission and Legal
 --------------------
-If you found this tool helpful please use it. It's free and you can do whatever you want. You can - if you want - remove the comments and names. You can reverse it upside down or print it out and let your dog chew on it. Do whatever you like - i do not care. But please, Éone last thing: please commit your fixes, that i can get your optimization back to my buildchain. 
+If you found this tool helpful please use it. It's free and you can do whatever you want. You can - if you want - remove the comments and names. You can reverse it upside down or print it out and let your dog chew on it. Do whatever you like - i do not care. But please, ï¿½one last thing: please commit your fixes, that i can get your optimization back to my buildchain. 
 
 Thanks a lot, 
 Kris, aka @Peter_Shaw
 
 Contact
 -------
-Please contact my via twitter <a href="http://twitter.com/peter_shaw">@peter_shaw</a>. 
+Please contact my via twitter <a href="http://twitter.com/peter_shaw">@peter_shaw</a>.
 
 
 
